@@ -1,0 +1,33 @@
+---
+ - hosts: group1
+   become: true
+   tasks:
+     - name: installing multiple packages
+       yum: name={{item}} state=installed disable_gpg_check=yes
+       with_items:
+       - httpd
+       - mariadb-server
+       - mariadb
+       - php
+       - php-mysql
+       - php-gd
+       register: Lamp_install
+
+     - name: "httpd pkg validation"
+       command: httpd -v
+       register: httpd_validation
+       when: httpd_validation|success
+
+
+     - name: starting httpd
+       service: name=httpd enabled=yes state=started
+       register: httpd_service
+       when: httpd_validation|success
+       
+
+     - name: "copying index file"
+       copy: src=index.html dest=/var/ww/index.html
+       register: index_status
+       when: httpd_service|success
+
+
