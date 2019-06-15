@@ -19,7 +19,7 @@ node {
     stage('Notification') {
         mail from: "jjanakiramu@gmail.com",
                 to: "jjanakiramu@rediff.com",
-                subject: "ansible deployment status"
+                subject: "ansible deployment status",
                 body: "jenkins job ${env.JOB_NAME} -build ${env.BUILD_NUMBER} ${currentBuild.currentResult} ${env.JOB_URL} complete"
 }
 
